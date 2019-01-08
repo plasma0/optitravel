@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <title>OptiTravel</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.4.0/dist/leaflet.css"
+          integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA=="
+          crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.4.0/dist/leaflet.js"
+            integrity="sha512-QVftwZFqvtRNi0ZyCtsznlKSWOStnDORoefr1enyq5mVL4tmKB3S/EnC3rRJcxCPavG10IcrVGSmPh6Qw5lwrg=="
+            crossorigin=""></script>
+    <link rel="stylesheet" href="index.css"/>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="http://bernii.github.io/gauge.js/dist/gauge.min.js"></script>
+
+</head>
+<body>
+<h2>Wybierz miasta na mapie</h2>
+<div id="mapid"></div>
+<div id="app">
+    <h4>Lista miast:</h4>
+    <form v-if="addForm">
+        Nazwa: <input v-model="cname" type="text"><br>
+        Długość geograficzna: {{clat}} <br>
+        Szerokość geograficzna: {{clng}} <br>
+        <button type="button" onclick="placeAdd()">Dodaj miejsce</button>
+    </form>
+    <ol>
+        <li v-for="place in places">
+            <b> {{ place.name }} </b> : {{place.lat}} x {{place.lng}}
+        </li>
+    </ol>
+    <br>
+    Wybierz metodę:
+    <select onchange="{if(this.value == 'A'){app.methodDefault = true; }else app.methodDefault = false;}">
+        <option value="A" >Stymulowane wyżarzanie</option>
+        <option value="E"  >Algorytm genetyczny</option>
+    </select>
+    <div v-if="methodDefault">
+        Temperatura początkowa: <input v-model="temperature" type="number"><br>
+        Stopień schładzania: <input v-model="coolrate" type="number"><br>
+        <canvas id="speedy"></canvas>
+        <br>
+        <p class="marq">Temperatura: {{ctemp}} </p>
+    </div>
+    <div v-else="methodDefault">
+        Rozmiar populacji: <input v-model="population" type="number"><br>
+        Ilość iteracji: <input v-model="giter">
+    </div>
+    <button type="button" onclick="{if(app.methodDefault == true)annel(); else populi();}">Rozpocznij poszukiwanie optymalnego rozwiązania</button><br>
+    <p class="marq">Wynik: <b> {{solution}} </b><p>
+</div>
+<script src="spa.js"></script>
+<script src="distance.js"></script>
+<script src="s_annel.js"></script>
+<script src="genetic.js"></script>
+<script src="speedometer.js"></script>
+</body>
+</html>
